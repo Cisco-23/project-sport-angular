@@ -17,9 +17,8 @@ export class AuthService {
   }
 
   // 2. REGISTRO: Enviar el objeto User para crearlo en la base de datos
-  // (Ajusta la ruta '/users' si en tu backend la de registro es otra, ej: '/auth/register')
   register(user: User): Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}/users`, user);
+    return this.http.post<User>(`${this.apiUrl}/auth/register`, user);
   }
 
   // 3. GUARDAR EL TOKEN: Lo metemos en el "almacén" del navegador

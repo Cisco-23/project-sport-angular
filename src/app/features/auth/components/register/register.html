@@ -72,6 +72,9 @@
       </div>
 
       <div class="form-actions mt-4">
+        @if (errorMessage) {
+          <div class="p-error text-center mb-3 font-bold">{{ errorMessage }}</div>
+        }
         <p-button
           label="Completar Registro"
           type="submit"
