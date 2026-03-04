@@ -1,1 +1,84 @@
-<p>register works!</p>
+<p-card header="Crear Cuenta" styleClass="w-full max-w-3xl mx-auto mt-5">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div class="form-container flex flex-col gap-4">
+      <div class="form-row flex gap-4">
+        <div class="form-group flex-1 flex flex-col gap-2">
+          <label for="nombre">Nombre</label>
+          <input type="text" pInputText formControlName="name" placeholder="Tu nombre" />
+          @let name = this.registerForm.get('name');
+          @if (name?.hasError('required') && name?.touched) {
+            <small class="p-error">El nombre es obligatorio</small>
+          }
+        </div>
+
+        <div class="form-group flex-1 flex flex-col gap-2">
+          <label for="email">Email</label>
+          <input type="email" pInputText formControlName="email" placeholder="tu@email.com" />
+          @let email = this.registerForm.get('email');
+          @if (email?.hasError('required') && email?.touched) {
+            <small class="p-error">El email es obligatorio</small>
+          }
+          @if (email?.hasError('email') && email?.touched) {
+            <small class="p-error">Formato de email inválido</small>
+          }
+        </div>
+      </div>
+
+      <div class="form-group flex flex-col gap-2">
+        <label for="password">Contraseña</label>
+        <input type="password" pInputText formControlName="password" placeholder="********" />
+        @let password = this.registerForm.get('password');
+        @if (password?.hasError('required') && password?.touched) {
+          <small class="p-error">La contraseña es obligatoria</small>
+        }
+      </div>
+
+      <div class="flex gap-4">
+        <div class="form-group flex-1 flex flex-col gap-2">
+          <label for="birthDate">Fecha de Nacimiento</label>
+
+          <p-datepicker
+            formControlName="birthDate"
+            dateFormat="yy-mm-dd"
+            [showIcon]="true"
+            placeholder="Selecciona tu fecha"
+          >
+          </p-datepicker>
+        </div>
+
+        <div class="form-group flex-1 flex flex-col gap-2">
+          <label for="gender">Género</label>
+          <p-select
+            [options]="optionsGener"
+            formControlName="gender"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Selecciona tu género"
+            class="w-full"
+          ></p-select>
+        </div>
+
+        <div class="form-group flex-1 flex flex-col gap-2">
+          <label for="level">Nivel de Juego</label>
+          <p-select
+            [options]="optionsLevel"
+            formControlName="level"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Selecciona tu nivel"
+            class="w-full"
+          ></p-select>
+        </div>
+      </div>
+
+      <div class="form-actions mt-4">
+        <p-button
+          label="Completar Registro"
+          type="submit"
+          [disabled]="registerForm.invalid"
+          class="w-full"
+        ></p-button>
+      </div>
+    </div>
+  </form>
+</p-card>
