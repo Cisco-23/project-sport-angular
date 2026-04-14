@@ -7,7 +7,7 @@ import { Login } from '../../models/auth.interface';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, RouterLink], // Importamos lo necesario aquí
+  imports: [FormsModule, RouterLink],
   templateUrl: './login.component.html'
 })
 export class LoginComponent {
@@ -21,7 +21,6 @@ export class LoginComponent {
     this.authService.login(this.credentials).subscribe({
       next: (response) => {
         this.authService.saveToken(response.token);
-        // Redirigimos al dashboard una vez logueado
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {

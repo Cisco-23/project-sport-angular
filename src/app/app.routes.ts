@@ -3,6 +3,7 @@ import { LoginComponent } from './components/login.component/login.component';
 import { RegisterComponent } from './components/register.component/register.component';
 import { DashboardComponent } from './components/dashboard/dashboard';
 import { authGuard } from './guards/auth-guard';
+import { ProfileComponent } from './components/profile/profile';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -11,12 +12,11 @@ export const routes: Routes = [
   { 
     path: 'dashboard', 
     component: DashboardComponent,
-    canActivate: [authGuard], // ¡El guardián en acción!
+    canActivate: [authGuard],
     children: [
-      // Dejamos las rutas preparadas para cuando creemos los componentes
+            { path: 'profile', component: ProfileComponent },
       /*
       { path: '', redirectTo: 'profile', pathMatch: 'full' },
-      { path: 'profile', component: ProfileComponent },
       { path: 'bookings', component: BookingsComponent },
       { path: 'statistics', component: StatisticsComponent }
       */

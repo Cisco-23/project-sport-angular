@@ -1,0 +1,65 @@
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <div class="card shadow-sm mt-3">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">⚙️ Ajustes de mi Perfil</h4>
+      </div>
+      
+      <div class="card-body">
+        @if (successMessage) {
+          <div class="alert alert-success">{{ successMessage }}</div>
+        }
+        @if (errorMessage) {
+          <div class="alert alert-danger">{{ errorMessage }}</div>
+        }
+
+        <form (ngSubmit)="onUpdateProfile()">
+          <div class="mb-3">
+            <label class="form-label text-muted">Correo Electrónico (Solo lectura)</label>
+            <input type="email" class="form-control bg-light" name="email" [(ngModel)]="user.email" readonly>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Nombre Completo</label>
+            <input type="text" class="form-control" name="name" [(ngModel)]="user.name" required>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Fecha de Nacimiento</label>
+              <input type="date" class="form-control" name="birthDate" [(ngModel)]="user.birthDate">
+            </div>
+            
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Género</label>
+              <select class="form-select" name="gender" [(ngModel)]="user.gender">
+                <option value="M">Masculino</option>
+                <option value="F">Femenino</option>
+                <option value="O">Otro</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Nivel de Juego</label>
+            <select class="form-select" name="level" [(ngModel)]="user.level">
+              <option value="BASIC">Básico</option>
+              <option value="MEDIUM">Medio</option>
+              <option value="HIGH">Alto</option>
+            </select>
+          </div>
+          
+          <hr>
+          <div class="mb-3">
+            <label class="form-label">Nueva Contraseña (opcional)</label>
+            <input type="password" class="form-control" name="password" [(ngModel)]="user.password" placeholder="Déjalo en blanco para no cambiarla">
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-success">Guardar Cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

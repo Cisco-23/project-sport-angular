@@ -5,7 +5,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive], // Necesarios para la navegación interna
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './dashboard.html'
 })
 export class DashboardComponent {
