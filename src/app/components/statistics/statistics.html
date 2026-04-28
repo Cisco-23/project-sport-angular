@@ -1,1 +1,52 @@
-<p>statistics works!</p>
+<div class="row mb-4 mt-3">
+  <div class="col-12">
+    <h3 class="mb-3">📊 Mi Dashboard de Rendimiento</h3>
+  </div>
+
+  <div class="col-md-6 mb-4">
+    <div class="card shadow-sm border-0 bg-primary text-white h-100">
+      <div class="card-body d-flex flex-column justify-content-center align-items-center">
+        <h5 class="card-title">Esporte Preferido</h5>
+        <h2 class="display-5 fw-bold">🎾 Squash</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 mb-4">
+    <div class="card shadow-sm border-0 bg-warning text-dark h-100">
+      <div class="card-body d-flex flex-column justify-content-center align-items-center">
+        <h5 class="card-title">Posición en el Ranking Global</h5>
+        <h2 class="display-5 fw-bold">#42</h2>
+        <small>De 150 jugadores activos</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-4 mb-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <canvas #winsChart></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-8 mb-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title text-center">Partidos Jugados por Mes</h5>
+        <canvas #matchesChart></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 mb-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title text-center">Evolución del Rendimiento</h5>
+        <canvas #evolutionChart style="max-height: 300px;"></canvas>
+      </div>
+    </div>
+  </div>
+</div>

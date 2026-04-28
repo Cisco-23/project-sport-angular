@@ -6,7 +6,6 @@ import { authInterceptor } from './interceptors/auth.interceptor';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    // Así se configura el cliente HTTP y el interceptor en Angular 21
     provideHttpClient(withInterceptors([authInterceptor])) 
   ],
 };

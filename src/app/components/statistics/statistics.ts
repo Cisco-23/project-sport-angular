@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ViewChild, ElementRef } from '@angular/core';
 import { Chart } from 'chart.js/auto';
 import { MatchResultService } from '../../services/match-result';
 import { AuthService } from '../../services/auth.service';
@@ -17,10 +17,15 @@ export class StatisticsComponent implements OnInit {
   currentUserId: string = '';
   totalWins: number = 0;
 
-  // Variables para guardar la referencia a los gráficos y poder destruirlos si recargamos
-  winsChart: any;
-  matchesChart: any;
-  evolutionChart: any;
+
+  private winsChartInstance: any;
+  private matchesChartInstance: any;
+  private evolutionChartInstance: any;
+
+
+  @ViewChild('winsChart') winsChartRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('matchesChart') matchesChartRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('evolutionChart') evolutionChartRef!: ElementRef<HTMLCanvasElement>;
 
   ngOnInit(): void {
     this.loadUserAndStats();
@@ -43,7 +48,6 @@ export class StatisticsComponent implements OnInit {
   }
 
   loadMyResults(): void {
-    // llamo ami backend para traer los resultados
     this.resultService.getPlayerWins(this.currentUserId).subscribe({
       next: (wins) => {
         this.totalWins = wins.length;
@@ -54,50 +58,51 @@ export class StatisticsComponent implements OnInit {
   }
 
   renderCharts(): void {
-    // grafico circular
-    const ctxWins = document.getElementById('winsChart') as HTMLCanvasElement;
-    this.winsChart = new Chart(ctxWins, {
+    // Usamos el nativeElement del ViewChild en lugar del document.getElementById
+    const ctxWins = this.winsChartRef.nativeElement;
+    if (this.winsChartInstance) this.winsChartInstance.destroy();
+    this.winsChartInstance = new Chart(ctxWins, {
       type: 'doughnut',
       data: {
         labels: ['Victorias', 'Derrotas'],
         datasets: [{
-          data: [this.totalWins, 5], // pequeña simulacion
+          data: [this.totalWins, 5],
           backgroundColor: ['#198754', '#dc3545']
         }]
       },
       options: { responsive: true, plugins: { title: { display: true, text: 'Porcentaje de Victorias' } } }
     });
 
-    // grafico de barras
-    const ctxMatches = document.getElementById('matchesChart') as HTMLCanvasElement;
-    this.matchesChart = new Chart(ctxMatches, {
+    const ctxMatches = this.matchesChartRef.nativeElement;
+    if (this.matchesChartInstance) this.matchesChartInstance.destroy();
+    this.matchesChartInstance = new Chart(ctxMatches, {
       type: 'bar',
       data: {
         labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
         datasets: [{
           label: 'Partidos Jugados',
-          data: [2, 4, 3, 6, this.totalWins], // Datos de ejemplo
+          data: [2, 4, 3, 6, this.totalWins],
           backgroundColor: '#0d6efd'
         }]
       },
       options: { responsive: true }
     });
 
-    // grafico de lineas
-    const ctxEvolution = document.getElementById('evolutionChart') as HTMLCanvasElement;
-    this.evolutionChart = new Chart(ctxEvolution, {
+    const ctxEvolution = this.evolutionChartRef.nativeElement;
+    if (this.evolutionChartInstance) this.evolutionChartInstance.destroy();
+    this.evolutionChartInstance = new Chart(ctxEvolution, {
       type: 'line',
       data: {
         labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
         datasets: [{
           label: 'Puntos/Sets Ganados',
-          data: [12, 19, 15, 22], // Datos de ejemplo
+          data: [12, 19, 15, 22],
           borderColor: '#ffc107',
-          tension: 0.4, // linea curva
+          tension: 0.4,
           fill: false
         }]
       },
-      options: { responsive: true }
+      options: { responsive: true, maintainAspectRatio: false }
     });
   }
 }
