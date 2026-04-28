@@ -9,7 +9,7 @@
          @if (successMessage) { <div class="alert alert-success">{{ successMessage }}</div> }
          @if (errorMessage) { <div class="alert alert-danger">{{ errorMessage }}</div> }
 
-         <form (ngSubmit)="onSubmit()">
+         <form #bookingForm="ngForm" (ngSubmit)="onSubmit(bookingForm)">
             
             <div class="mb-3">
               <label class="form-label fw-bold">Tipo de Reserva</label>
@@ -44,7 +44,14 @@
               </div>
             }
 
-            <button type="submit" class="btn btn-success w-100">Confirmar Reserva</button>
+            <button type="submit" class="btn btn-success w-100" [disabled]="isSubmitting">
+  @if (isSubmitting) {
+    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+    Procesando...
+  } @else {
+    Confirmar Reserva
+  }
+</button>
          </form>
       </div>
     </div>
@@ -63,11 +70,11 @@
                 <th>Fecha y Hora</th>
                 <th>Pista</th>
                 <th>Estado</th>
-                <th>Contrincante (ID)</th>
+                <th>Contrincante</th>
               </tr>
             </thead>
             <tbody>
-              @for (booking of myBookings; track booking.id) {
+              @for (booking of myBookings(); track booking.id) {
                 <tr>
                   <td>{{ booking.dateTime | date:'dd/MM/yyyy HH:mm' }}</td>
                   <td>{{ booking.courtName }}</td>
@@ -79,12 +86,12 @@
                     }
                   </td>
                   <td>
-                    @if (booking.player1Id === currentUserId) {
-                      {{ booking.player2Id || '---' }}
-                    } @else {
-                      {{ booking.player1Id }}
-                    }
-                  </td>
+      @if (booking.player1Id === currentUserId) {
+        {{ getOpponentName(booking.player2Id) }}
+      } @else {
+        {{ getOpponentName(booking.player1Id) }}
+      }
+    </td>
                 </tr>
               } @empty {
                 <tr>
