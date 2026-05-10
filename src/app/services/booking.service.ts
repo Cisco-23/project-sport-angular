@@ -34,4 +34,9 @@ export class BookingService {
   cancelBooking(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  
+getPendingResults(userId: string): Observable<Booking[]> {
+    return this.http.get<Booking[]>(`${this.apiUrl}/user/${userId}/pending-results`);
+}
 }

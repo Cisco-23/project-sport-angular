@@ -1,0 +1,112 @@
+<div class="row">
+  <div class="col-12">
+    <h3 class="mb-4">📝 Registrar Resultados de Partidos</h3>
+    
+    @if (successMessage()) {
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ successMessage() }}
+        <button type="button" class="btn-close" (click)="successMessage.set('')"></button>
+      </div>
+    }
+    
+    @if (errorMessage()) {
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ errorMessage() }}
+        <button type="button" class="btn-close" (click)="errorMessage.set('')"></button>
+      </div>
+    }
+
+    @if (isLoading()) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-2 text-muted">Cargando partidos pendientes...</p>
+      </div>
+    }
+
+    <div class="card shadow-sm">
+      <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Partidos Pendientes de Resultado</h5>
+        <button class="btn btn-sm btn-outline-light" (click)="loadAllData()">
+          🔄 Actualizar
+        </button>
+      </div>
+      <div class="card-body">
+        @if (!isLoading() && completedBookings().length === 0) {
+          <div class="text-center py-5">
+            <p class="text-muted">No tienes partidos pendientes de registrar resultados</p>
+          </div>
+        } @else {
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>Fecha</th>
+                  <th>Pista</th>
+                  <th>Rival</th>
+                  <th class="text-center">Tus Sets</th>
+                  <th class="text-center">Sets Rival</th>
+                  <th class="text-center">Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (booking of completedBookings(); track booking.id) {
+                  <tr>
+                    <td>
+                      <span class="fw-medium">{{ booking.dateTime | date:'dd/MM/yyyy' }}</span>
+                      <br>
+                      <small class="text-muted">{{ booking.dateTime | date:'HH:mm' }}</small>
+                    </td>
+                    <td>{{ booking.courtName }}</td>
+                    <td>
+                      <span class="badge bg-secondary">{{ getOpponentName(booking) }}</span>
+                    </td>
+                    <td>
+                      <div class="d-flex justify-content-center">
+                        <input type="number" 
+                               class="form-control form-control-sm text-center" 
+                               style="width: 80px"
+                               [ngModel]="matchSets()[booking.id || '']?.player1Sets || 0"
+                               (ngModelChange)="updateSets(booking.id || '', 'player1Sets', $event)"
+                               min="0" max="5">
+                      </div>
+                    </td>
+                    <td>
+                      <div class="d-flex justify-content-center">
+                        <input type="number" 
+                               class="form-control form-control-sm text-center" 
+                               style="width: 80px"
+                               [ngModel]="matchSets()[booking.id || '']?.player2Sets || 0"
+                               (ngModelChange)="updateSets(booking.id || '', 'player2Sets', $event)"
+                               min="0" max="5">
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <button class="btn btn-success btn-sm" (click)="onSubmitResult(booking)">
+                        Guardar
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    </div>
+
+    @if (!isLoading() && completedBookings().length > 0) {
+      <div class="card mt-3 bg-light border-0">
+        <div class="card-body">
+          <h6 class="card-title">Instrucciones:</h6>
+          <ul class="mb-0 small">
+            <li>Introduce los sets ganados por cada jugador (0-5)</li>
+            <li>El ganador se determinará automáticamente</li>
+            <li>No se permite empate en sets</li>
+          </ul>
+        </div>
+      </div>
+    }
+  </div>
+</div>

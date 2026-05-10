@@ -1,31 +1,43 @@
 <div class="row">
-  
   <div class="col-lg-4 mb-4">
     <div class="card shadow-sm border-0">
       <div class="card-header bg-success text-white">
         <h5 class="mb-0">📅 Nueva Reserva</h5>
       </div>
       <div class="card-body">
-         @if (successMessage) { <div class="alert alert-success">{{ successMessage }}</div> }
-         @if (errorMessage) { <div class="alert alert-danger">{{ errorMessage }}</div> }
+         @if (successMessage()) { 
+           <div class="alert alert-success">{{ successMessage() }}</div> 
+         }
+         @if (errorMessage()) { 
+           <div class="alert alert-danger">{{ errorMessage() }}</div> 
+         }
+         @if (isSubmitting()) {
+           <div class="text-center py-3">
+             <div class="spinner-border text-success" role="status">
+               <span class="visually-hidden">Procesando...</span>
+             </div>
+           </div>
+         }
 
          <form #bookingForm="ngForm" (ngSubmit)="onSubmit(bookingForm)">
-            
             <div class="mb-3">
               <label class="form-label fw-bold">Tipo de Reserva</label>
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="mode" value="individual" [(ngModel)]="bookingMode">
+                <input class="form-check-input" type="radio" name="mode" value="individual" 
+                       [ngModel]="bookingMode()" (ngModelChange)="bookingMode.set($event)">
                 <label class="form-check-label">Individual (Asignación automática)</label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="mode" value="partner" [(ngModel)]="bookingMode">
+                <input class="form-check-input" type="radio" name="mode" value="partner" 
+                       [ngModel]="bookingMode()" (ngModelChange)="bookingMode.set($event)">
                 <label class="form-check-label">Con Pareja</label>
               </div>
             </div>
 
             <div class="mb-3">
               <label class="form-label">Selecciona Pista</label>
-              <select class="form-select" name="courtName" [(ngModel)]="newBooking.courtName">
+              <select class="form-select" name="courtName" 
+                      [ngModel]="selectedCourt()" (ngModelChange)="selectedCourt.set($event)">
                 <option value="Pista de Squash 1">Pista de Squash 1</option>
                 <option value="Pista de Squash 2">Pista de Squash 2</option>
                 <option value="Pista Central">Pista Central</option>
@@ -34,24 +46,27 @@
 
             <div class="mb-3">
               <label class="form-label">Fecha y Hora</label>
-              <input type="datetime-local" class="form-control" name="dateTime" [(ngModel)]="newBooking.dateTime" required>
+              <input type="datetime-local" class="form-control" name="dateTime" 
+                     [ngModel]="selectedDateTime()" (ngModelChange)="selectedDateTime.set($event)" required>
             </div>
 
-            @if (bookingMode === 'partner') {
+            @if (bookingMode() === 'partner') {
               <div class="mb-3">
-                <label class="form-label">ID del Jugador 2</label>
-                <input type="text" class="form-control" name="player2Id" [(ngModel)]="newBooking.player2Id" placeholder="Pega aquí el ID de tu amigo" required>
+                <label class="form-label">Email del Jugador 2</label>
+                <input type="email" class="form-control" name="player2Id" 
+                       [ngModel]="partnerId()" (ngModelChange)="partnerId.set($event)" 
+                       placeholder="ej: maria.lopez@test.com" required>
               </div>
             }
 
-            <button type="submit" class="btn btn-success w-100" [disabled]="isSubmitting">
-  @if (isSubmitting) {
-    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-    Procesando...
-  } @else {
-    Confirmar Reserva
-  }
-</button>
+            <button type="submit" class="btn btn-success w-100" [disabled]="isSubmitting()">
+              @if (isSubmitting()) {
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Procesando...
+              } @else {
+                Confirmar Reserva
+              }
+            </button>
          </form>
       </div>
     </div>
@@ -59,8 +74,11 @@
 
   <div class="col-lg-8">
     <div class="card shadow-sm border-0">
-      <div class="card-header bg-dark text-white">
+      <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
         <h5 class="mb-0">🕒 Mi Historial de Reservas</h5>
+        <button class="btn btn-sm btn-outline-light" (click)="loadMyBookings()">
+          🔄 Actualizar
+        </button>
       </div>
       <div class="card-body p-0">
         <div class="table-responsive">
@@ -86,12 +104,12 @@
                     }
                   </td>
                   <td>
-      @if (booking.player1Id === currentUserId) {
-        {{ getOpponentName(booking.player2Id) }}
-      } @else {
-        {{ getOpponentName(booking.player1Id) }}
-      }
-    </td>
+                    @if (booking.player1Id === currentUserId()) {
+                      {{ getOpponentName(booking.player2Id) }}
+                    } @else {
+                      {{ getOpponentName(booking.player1Id) }}
+                    }
+                  </td>
                 </tr>
               } @empty {
                 <tr>
